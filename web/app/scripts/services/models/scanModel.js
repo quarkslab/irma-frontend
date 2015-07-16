@@ -204,13 +204,16 @@
           if(_.filter(files, function(file){
             return _.isUndefined(file.hash)
           }).length === 0){
+            // All files have been hashed
             console.log('fini');
           }
         }
       }
 
       _.map(files, function(file){
-        hasher.hash(file.file, handler(file));
+        if(_.isUndefined(file.hash)){
+          hasher.hash(file.file, handler(file));
+        }
       });
 
       console.log(files);
