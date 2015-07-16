@@ -25,7 +25,8 @@
     "angular-moment": "~0.8.2",
     "ng-table": "~0.3.3",
     "angular-svg-round-progressbar": "~0.2.0",
-    "crypto-js": "~3.1.5"
+    "crypto-js": "~3.1.5",
+    "operative": "~0.4.4"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",

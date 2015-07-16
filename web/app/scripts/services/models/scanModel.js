@@ -188,15 +188,32 @@
     
     function fileAdded(event, files){
 
-      var reader = new FileReader();
-      reader.onload = function(event){
-        var sha256 = CryptoJS.SHA256(event.target.result).toString();
-        console.log(sha256);
-      };
+      var hasher = operative({
+        hash: function(file, callback) {
+          var reader = new FileReaderSync();
+          var buffer = reader.readAsBinaryString(file);
+          var sha256 = CryptoJS.SHA256(buffer).toString()
+          callback(sha256);
+        }
+      }, ['/scripts/worker.js']);
+
+      var handler = function(file){
+        return function(result){
+          file.hash = result;
+
+          if(_.filter(files, function(file){
+            return _.isUndefined(file.hash)
+          }).length === 0){
+            console.log('fini');
+          }
+        }
+      }
 
       _.map(files, function(file){
-        reader.readAsBinaryString(file.file);
+        hasher.hash(file.file, handler(file));
       });
+
+      console.log(files);
     }
   }
 }) ();
