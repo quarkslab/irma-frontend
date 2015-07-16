@@ -25,8 +25,9 @@
       };
 
       // Bind uploader events
-      this.uploader.bind('error',       this.errorUpload.bind(this));
-      this.uploader.bind('completeall', this.doneUpload.bind(this));
+      this.uploader.bind('error',          this.errorUpload.bind(this));
+      this.uploader.bind('completeall',    this.doneUpload.bind(this));
+      this.uploader.bind('afteraddingall', this.fileAdded.bind(this));
     }
 
     ScanModel.prototype = {
@@ -42,7 +43,8 @@
       updateScan: updateScan,
       setProgress: setProgress,
       getResults: getResults,
-      getResult: getResult
+      getResult: getResult,
+      fileAdded: fileAdded
     };
 
     return ScanModel;
@@ -181,6 +183,20 @@
       $log.info('Retrieve file result ' + resultid);
 
       return api.scan.getResult(this, resultid);
+    }
+
+    
+    function fileAdded(event, files){
+
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var sha256 = CryptoJS.SHA256(event.target.result).toString();
+        console.log(sha256);
+      };
+
+      _.map(files, function(file){
+        reader.readAsBinaryString(file.file);
+      });
     }
   }
 }) ();
