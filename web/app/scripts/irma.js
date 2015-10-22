@@ -12,6 +12,7 @@ angular.module('irma', [
   'angularMoment',
   'ngTable',
   'ngTagsInput',
+  'ui.bootstrap',
   'angular-svg-round-progress'
 ])
   .constant('constants', {
