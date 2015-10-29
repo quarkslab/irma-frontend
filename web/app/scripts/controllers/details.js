@@ -12,6 +12,7 @@
     vm.results = undefined;    
     $scope.tags = undefined;
     $scope.availableTags = undefined;
+	$scope.file_url = undefined;
     
     $scope.tagAdded = function(tag) {
     	api.tag.addTag(vm.results.file_infos.sha256, tag.id);
@@ -45,11 +46,18 @@
       resultManager.getResult($routeParams.resultId).then(function(results) {
         vm.results = results;
         $scope.tags = results.file_infos.tags;
+        computeFileURL();
       });
       
       resultManager.getAvailableTags().then(function(results) {
     	  $scope.availableTags = results.items;
         });
+    }
+    
+    function computeFileURL() {
+      var sha256 = vm.results.file_infos.sha256;
+      $scope.file_url = sha256.substr(0,2) + "/" + sha256.substr(2,2) + "/" + sha256.substr(4,2) + "/" + sha256;
+      alert($scope.file_url);
     }
   }
 }) ();
