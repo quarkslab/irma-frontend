@@ -15,7 +15,7 @@
     "angular-resource": "~1.2.16",
     "angular-sanitize": "~1.2.16",
     "angular-route": "~1.2.16",
-    "angular-file-upload": "~0.5.6",
+    "angular-file-upload": "~2.2.0",
     "es5-shim": "~3.0.2",
     "json3": "~3.3.1",
     "bootstrap": "~3.1.1",

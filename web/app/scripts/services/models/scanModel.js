@@ -5,16 +5,16 @@
     .module('irma')
     .factory('scanModel', Scan);
 
-  Scan.$inject = ['$rootScope', '$fileUploader', '$timeout', '$log', 'api', 'alerts', 'constants'];
+  Scan.$inject = ['$rootScope', 'FileUploader', '$timeout', '$log', 'api', 'alerts', 'constants'];
 
-  function Scan($rootScope, $fileUploader, $timeout, $log, api, alerts, constants) {
+  function Scan($rootScope, FileUploader, $timeout, $log, api, alerts, constants) {
     function ScanModel(id) {
       this.id = id;
       this.state = undefined;
       this.api = api;
       this.task = undefined;
       this.base = undefined;
-      this.uploader = $fileUploader.create();
+      this.uploader = new FileUploader();
       this.status = constants.scanStatusCodes.STOPPED;
       this.results = undefined;
       this.scanProgress = {
@@ -25,8 +25,8 @@
       };
 
       // Bind uploader events
-      this.uploader.bind('error',       this.errorUpload.bind(this));
-      this.uploader.bind('completeall', this.doneUpload.bind(this));
+      this.uploader.onErrorItem = this.errorUpload.bind(this);
+      this.uploader.onCompleteAll = this.doneUpload.bind(this);
     }
 
     ScanModel.prototype = {

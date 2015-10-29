@@ -3,12 +3,12 @@
   <div class="row">
     <div class="col-md-6">
       <div ng-show="state.scan.uploader.isHTML5">
-        <div class="drop-zone" ng-file-over="hover" ng-file-drop>
+        <div class="drop-zone" nv-file-over="hover" nv-file-drop uploader="state.scan.uploader">
           Drop your files in here
         </div>
       </div>
       <div class="browse">
-        <input id="file-container" class="hidden" type="file" name="file" ng-file-select multiple>
+        <input id="file-container" class="hidden" type="file" name="file" nv-file-select="" uploader="state.scan.uploader" multiple  />
         Or choose them with this: &nbsp; <button class="btn btn-default" type="button" file-trigger>Choose file</button>
       </div>
     </div>
