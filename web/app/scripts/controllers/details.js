@@ -59,7 +59,6 @@
     function computeFileURL() {
       var sha256 = vm.results.file_infos.sha256;
       $scope.file_url = sha256.substr(0,2) + "/" + sha256.substr(2,2) + "/" + sha256.substr(4,2) + "/" + sha256;
-      alert($scope.file_url);
     }
     
 	function processProbeLists() {
