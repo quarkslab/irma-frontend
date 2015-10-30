@@ -13,6 +13,7 @@
     $scope.tags = undefined;
     $scope.availableTags = undefined;
 	$scope.file_url = undefined;
+    $scope.probesDoneButNotExist = new Array();
     
     $scope.tagAdded = function(tag) {
     	api.tag.addTag(vm.results.file_infos.sha256, tag.id);
@@ -45,6 +46,7 @@
 
       resultManager.getResult($routeParams.resultId).then(function(results) {
         vm.results = results;
+        processProbeLists();
         $scope.tags = results.file_infos.tags;
         computeFileURL();
       });
@@ -58,6 +60,29 @@
       var sha256 = vm.results.file_infos.sha256;
       $scope.file_url = sha256.substr(0,2) + "/" + sha256.substr(2,2) + "/" + sha256.substr(4,2) + "/" + sha256;
       alert($scope.file_url);
+    }
+    
+	function processProbeLists() {
+      var probes_done = Array.from(vm.results.probe_list);
+      var probes_exist = new Array();
+
+      for (var i=0, item; item = state.probes[i]; i++) {
+          probes_exist.push(item.name);
+      }
+
+      for (var i=0, item; item = probes_done[i]; i++) {
+        if(probes_exist.indexOf(item) < 0) {
+          $scope.probesDoneButNotExist.push(item);
+        }
+      }
+
+      for (var i=0, item; item = state.probes[i]; i++) {
+        if(probes_done.indexOf(item.name) < 0) {
+          item.active = false;
+        } else {
+          item.active = true;
+        }
+      }
     }
   }
 }) ();

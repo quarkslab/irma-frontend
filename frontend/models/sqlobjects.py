@@ -660,6 +660,14 @@ class FileWeb(Base, SQLDatabaseObject):
 
         return results
 
+    def get_probe_list(self):
+        results = []
+
+        for pr in self.probe_results:
+            results.append(pr.name)
+
+        return results
+
     @classmethod
     def query_find_by_name(cls, name, tags, session):
         query = session.query(FileWeb)\
