@@ -49,15 +49,17 @@
         </tr>
         </tbody>
     </table>
-
-    <ul class="list-inline probes-list">
-        <li ng-repeat="probe in probesDoneButNotExist" class=''>
-            <span boolean-display="true" color='#000'></span> {{probe}}
-        </li>
-        <li ng-repeat="probe in state.probes" ng-click="probe.active = !probe.active" class="{{(probe.active)? 'active': ''}}">
-            <span boolean-display="probe.active" color="{{(probe.active)? '#fff': '#999'}}"></span> {{probe.name}}
-        </li>
-    </ul>
+    <form ng-submit="vm.rescan()">
+        <ul class="list-inline probes-list">
+            <li ng-repeat="probe in probesDoneButNotExist" class=''>
+                <span boolean-display="true" color='#000'></span> {{probe}}
+            </li>
+            <li ng-repeat="probe in state.probes" ng-click="probe.active = !probe.active" class="{{(probe.active)? 'active': ''}}">
+                <span boolean-display="probe.active" color="{{(probe.active)? '#fff': '#999'}}"></span> {{probe.name}}
+            </li>
+            <li><input type="submit" class="action btn btn-lg btn-success" value="Rescan" ng-disabled="state.noActiveProbes()"></li>
+        </ul>
+    </form>
 </div>
 <tabset>
     <tab heading="Analyses">

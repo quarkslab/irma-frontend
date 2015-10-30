@@ -5,14 +5,15 @@
     .module('irma')
     .controller('DetailsCtrl', Details);
 
-  Details.$inject = ['$rootScope', '$scope', '$routeParams', 'state', 'resultsManager', 'api'];
+  Details.$inject = ['$rootScope', '$scope', '$routeParams', 'state', 'resultsManager', '$http', 'FileUploader', 'api'];
 
-  function Details($rootScope, $scope, $routeParams, state, resultManager, api) {
+  function Details($rootScope, $scope, $routeParams, state, resultManager, $http, FileUploader, api) {
     var vm = this;
-    vm.results = undefined;    
-    $scope.tags = undefined;
+    vm.results = undefined;
+	$scope.tags = undefined;
     $scope.availableTags = undefined;
-	$scope.file_url = undefined;
+    vm.rescan = rescan;
+    $scope.file_url = undefined;
     $scope.probesDoneButNotExist = new Array();
     
     $scope.tagAdded = function(tag) {
@@ -60,8 +61,34 @@
       var sha256 = vm.results.file_infos.sha256;
       $scope.file_url = sha256.substr(0,2) + "/" + sha256.substr(2,2) + "/" + sha256.substr(4,2) + "/" + sha256;
     }
-    
-	function processProbeLists() {
+
+    function rescan() {
+      state.settings.force = true;
+      state.newScan();
+      addFileToQueue();
+      state.lastAction = 'startUpload';
+      $scope.$emit('startUpload');
+    }
+
+    function addFileToQueue() {
+      var url = '/samples/' + $scope.file_url;
+      $http.get(url,{responseType: "blob"})
+      .success(function(data, status, headers, config) {
+        var mimetype = data.type;
+        var file = new File([data], undefined);
+        var dummy = new FileUploader.FileItem(state.scan.uploader, {name: vm.results.name, type:mimetype});
+        dummy._file = file;
+        dummy.progress = 0;
+        dummy.isUploaded = false;
+        dummy.isSuccess = false;
+        state.scan.uploader.queue.push(dummy);
+      })
+      .error(function(data, status, headers, config) {
+        alert("The url could not be loaded...\n (network error? non-valid url? server offline? etc?)");
+      });
+    }
+
+    function processProbeLists() {
       var probes_done = Array.from(vm.results.probe_list);
       var probes_exist = new Array();
 
