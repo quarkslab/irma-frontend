@@ -1,4 +1,5 @@
-<div class="result-section">
+<div class="header-section">
+    <p><a href="/scan/{{state.scan.id}}">Back to the scan summary</a></p>
     <h2 id="file-informations">File informations</h2>
 	<tags-input 
             ng-model="tags"
@@ -57,8 +58,10 @@
             <li ng-repeat="probe in state.probes" ng-click="probe.active = !probe.active" class="{{(probe.active)? 'active': ''}}">
                 <span boolean-display="probe.active" color="{{(probe.active)? '#fff': '#999'}}"></span> {{probe.name}}
             </li>
-            <li><input type="submit" class="action btn btn-lg btn-success" value="Rescan" ng-disabled="state.noActiveProbes()"></li>
         </ul>
+        <p>
+            <input type="submit" class="action btn btn-lg btn-success" value="Rescan" ng-disabled="state.noActiveProbes()">
+        </p>
     </form>
 </div>
 <tabset>
