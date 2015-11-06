@@ -10,6 +10,11 @@
   function API($q, bridge) {
     var service = this;
     service.ping = ping;
+    service.file = {
+        addAttachments: addAttachments,
+        deleteAttachment: deleteAttachment,
+        listAttachments: listAttachments,
+    }
     service.getProbes = getProbes;
     service.scan = {
         createNew: createNew,
@@ -25,6 +30,12 @@
 	};
 
     function ping() { return bridge.get({url: '/probes', noAlerts: true}); }
+
+    // File functions
+    function addAttachments(sha256) { return bridge.rootUrl + '/files/' + sha256 + '/attachments/add'; }
+    function deleteAttachment(sha256, attachment) { return bridge.get({url: '/files/' + sha256 + '/attachments/' + attachment + '/delete'}); }
+    function listAttachments(sha256) { return bridge.get({url: '/files/' + sha256 + '/attachments'}); }
+
     function getProbes() { return bridge.get({url: '/probes'}); }
 
     // Scan functions
