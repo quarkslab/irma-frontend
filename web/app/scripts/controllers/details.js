@@ -9,10 +9,16 @@
 
   function Details($rootScope, $scope, $routeParams, state, resultManager, $http, FileUploader, api) {
     var vm = this;
+    vm.api = api;
     vm.results = undefined;
 	$scope.tags = undefined;
     $scope.availableTags = undefined;
+    vm.attachmentList = [];
     vm.rescan = rescan;
+    vm.uploader = new FileUploader();
+    vm.uploadAttachment = uploadAttachment;
+    vm.deleteAttachment = deleteAttachment;
+
     $scope.file_url = undefined;
     $scope.probesDoneButNotExist = new Array();
     
@@ -34,6 +40,11 @@
         return results;
     };
 
+
+    // Bind uploader events
+    this.uploader.onErrorItem = errorUpload;
+    this.uploader.onCompleteAll = doneUpload;
+
     activate();
 
     function activate() {
@@ -50,6 +61,15 @@
         processProbeLists();
         $scope.tags = results.file_infos.tags;
         computeFileURL();
+        fetchAttachmentList();
+      });
+    }
+
+    function fetchAttachmentList() {
+      vm.api.file.listAttachments(vm.results.file_infos.sha256).then(function(response) {
+        if(response.total > 0) {
+          vm.attachmentList = response.data;
+        }
       });
       
       resultManager.getAvailableTags().then(function(results) {
@@ -65,12 +85,37 @@
     function rescan() {
       state.settings.force = true;
       state.newScan();
-      addFileToQueue();
+      addFileToQueueForRescan();
       state.lastAction = 'startUpload';
       $scope.$emit('startUpload');
     }
 
-    function addFileToQueue() {
+    function deleteAttachment(attachment) {
+      vm.api.file.deleteAttachment(vm.results.file_infos.sha256, attachment).then(function(response) {
+        if(response.total > 0) {
+          var index = vm.attachmentList.indexOf(attachment);
+          vm.attachmentList.splice(index, 1);
+        }
+      });
+    }
+
+    function uploadAttachment() {
+        var items = vm.uploader.getNotUploadedItems();
+        _.each(items, function(item){
+          item.url = vm.api.file.addAttachments(vm.results.file_infos.sha256);
+        });
+        vm.uploader.uploadAll();
+    }
+
+    function errorUpload() {
+      alert("Error when uploading... please retry");
+    }
+
+    function doneUpload(event, items) {
+      fetchAttachmentList();
+    }
+
+    function addFileToQueueForRescan() {
       var url = '/samples/' + $scope.file_url;
       $http.get(url,{responseType: "blob"})
       .success(function(data, status, headers, config) {
