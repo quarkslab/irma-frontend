@@ -17,8 +17,13 @@
     <table class="table table-bordered">
         <tbody>
         <tr>
-            <th>Filename</th>
-            <td><a target="_self" href="/samples/{{file_url}}" download="{{vm.results.name}}">{{vm.results.name}}</td>
+            <th style="vertical-align: middle">Filename</th>
+            <td>{{vm.results.name}}
+                <a target="_self" href="/samples/{{file_url}}" download="{{vm.results.name}}">
+                    <button type="button" class="btn btn-success btn-s button-download">
+                        <span class="glyphicon glyphicon-download"></span>
+                    </button>
+            </td>
         </tr>
         <tr>
             <th>Size (bytes)</th>
@@ -168,6 +173,90 @@
                     </div>
 
                     <pre ng-switch-default>{{output.results}}</pre>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="Attachments">
+        <div class="attachments-section">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-bordered table-attachment">
+                        <tbody>
+                        <tr ng-repeat="attachment in vm.attachmentList">
+                            <td style="width:75%;vertical-align: middle;overflow: hidden;
+    text-overflow: ellipsis;">{{attachment}}</td>
+                            <td class="attachment-download">
+                                <a target="_self" href="/attachments/{{vm.results.file_infos.sha256}}/{{attachment}}" download="{{attachment}}">
+                                    <button type="button" class="btn btn-success btn-s">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                    </button>
+                            </td>
+                            <td class="attachment-delete">
+                                <button type="button" class="btn btn-danger btn-s" ng-click="vm.deleteAttachment(attachment)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 files">
+                    <div>
+                        <ul class="list-inline upload-button-list">
+                            <li>
+                                <button type="button" class="btn btn-success btn-s" ng-click="vm.uploadAttachment()" ng-disabled="!vm.uploader.getNotUploadedItems().length">
+                                    <span class="glyphicon glyphicon-upload"></span> Upload
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-warning btn-s" ng-click="vm.uploader.cancelAll()" ng-disabled="!vm.uploader.isUploading">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-danger btn-s" ng-click="vm.uploader.clearQueue()" ng-disabled="!vm.uploader.queue.length">
+                                    <span class="glyphicon glyphicon-trash"></span> Reset
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="progress" style="">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': vm.uploader.progress + '%' }"></div>
+                        </div>
+                        <input type="file" nv-file-select="" uploader="vm.uploader"/>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="50%">Name</th>
+                            <th ng-show="vm.uploader.isHTML5">Size</th>
+                            <th ng-show="vm.uploader.isHTML5">Progress</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in vm.uploader.queue">
+                            <td><strong>{{ item.file.name }}</strong></td>
+                            <td ng-show="vm.uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                            <td ng-show="vm.uploader.isHTML5">
+                                <div class="progress" style="margin-bottom: 0;">
+                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                            </td>
+                            <td nowrap>
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                    <span class="glyphicon glyphicon-trash"></span> Remove
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
