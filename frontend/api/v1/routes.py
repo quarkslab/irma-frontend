@@ -13,7 +13,7 @@
 # modified, propagated, or distributed except according to the
 # terms contained in the LICENSE file.
 
-from frontend.api.v1.controllers import probes, search, scans
+from frontend.api.v1.controllers import files, probes, search, scans
 
 
 """ Define all routes for the API
@@ -22,6 +22,13 @@ from frontend.api.v1.controllers import probes, search, scans
 
 
 def define_routes(application):
+    # files routes
+    application.route("/files/<sha256>/attachments/add", method="POST",
+                      callback=files.add_attachments)
+    application.route("/files/<sha256>/attachments/<attachment>/delete",
+                      callback=files.delete_attachment)
+    application.route("/files/<sha256>/attachments",
+                      callback=files.list_attachments)
     # probes routes
     application.route("/probes", callback=probes.list)
     # files routes

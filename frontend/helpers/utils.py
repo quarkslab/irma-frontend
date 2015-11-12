@@ -94,7 +94,7 @@ def build_sha256_path(sha256):
 
 
 def write_sample_on_disk(sha256, data):
-    """Write file data on the location calculated from file sha256
+    """Write sample data on the location calculated from file sha256
     :param sha256: the file's sha256
     :param data: the file's data
     :rtype: string
@@ -110,3 +110,74 @@ def write_sample_on_disk(sha256, data):
             'Cannot add the sample {0} to the collection'.format(sha256)
         )
     return path
+
+
+def write_attachment_on_disk(sha256, name, data):
+    """Write attachment data on the location calculated from sample sha256
+    :param sha256: the file's sha256
+    :param data: the file's data
+    :rtype: string
+    :return: the path build from the sha256
+    :raise: IrmaFileSystemError
+    """
+    base_path = config.get_attachments_storage_path()
+    path = os.path.join(base_path, sha256)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    if not os.path.isdir(path):
+        reason = "storage path is not a directory"
+        raise IrmaFileSystemError(reason)
+    try:
+        with open(os.path.join(path, name), 'wb') as filee:
+            filee.write(data)
+    except IOError:
+        raise IrmaFileSystemError(
+            'Cannot add attachment {0} for sample {0}'.format(name, sha256)
+        )
+    return path
+
+
+def delete_attachment_on_disk(sha256, name):
+    """Delete attachment from sample sha256
+    :param sha256: the file's sha256
+    :param name: the attachment file name to delete
+    :rtype: int
+    :return: number of deleted file (1 or 0)
+    :raise: IrmaFileSystemError
+    """
+    files_deleted = []
+
+    base_path = config.get_attachments_storage_path()
+    path = os.path.join(base_path, sha256)
+    if not os.path.exists(path):
+        reason = "attachment storage path does not exist"
+        raise IrmaFileSystemError(reason)
+    try:
+        os.remove(os.path.join(path, name))
+        files_deleted.append(name)
+    except IOError:
+        raise IrmaFileSystemError(
+            'Cannot add attachment {0} for sample {0}'.format(name, sha256)
+        )
+    return files_deleted
+
+
+def list_attachments_on_disk(sha256):
+    """List all the attachments on the diskl for sample sha256
+    :param sha256: the file's sha256
+    :rtype: list
+    :return: list of filenames in /<sha256>/
+    :raise: IrmaFileSystemError
+    """
+    base_path = config.get_attachments_storage_path()
+    path = os.path.join(base_path, sha256)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    try:
+        only_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    except Exception:
+        raise IrmaFileSystemError(
+            'Cannot list attachment for file {0}'.format(sha256)
+        )
+    return only_files
+

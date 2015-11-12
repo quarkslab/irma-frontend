@@ -15,9 +15,22 @@
 
 from frontend.models.sqlobjects import File
 from frontend.helpers.sessions import session_transaction
+from frontend.helpers.utils import write_attachment_on_disk
 
 
 # used by tasks.py
 def remove_files(max_age_sec):
     with session_transaction() as session:
         return File.remove_old_files(max_age_sec, session)
+
+
+def add_attachment(sha256, files):
+    """ add attachment(s) to the file specified by sha256
+
+    :param sha256: file sha256
+    :param files: dict of 'filename':str, 'data':str
+    :rtype: int
+    :return: int - total number of files for the scan
+    """
+    for (name, data) in files.items():
+        write_attachment_on_disk(sha256, name, data)
