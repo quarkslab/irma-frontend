@@ -174,10 +174,12 @@ def list_attachments_on_disk(sha256):
     if not os.path.exists(path):
         os.makedirs(path)
     try:
-        only_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+        only_files = [
+            f for f in os.listdir(path)
+            if os.path.isfile(os.path.join(path, f))
+            ]
     except Exception:
         raise IrmaFileSystemError(
             'Cannot list attachment for file {0}'.format(sha256)
         )
     return only_files
-

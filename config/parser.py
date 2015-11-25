@@ -273,5 +273,6 @@ def get_sql_db_tables_prefix():
 def get_samples_storage_path():
     return os.path.abspath(frontend_config.samples_storage.path)
 
+
 def get_attachments_storage_path():
     return os.path.abspath(frontend_config.attachments_storage.path)
