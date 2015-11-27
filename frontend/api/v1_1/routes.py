@@ -56,3 +56,9 @@ def define_routes(application):
                       callback=files.add_tag)
     application.route("/files/<sha256>/tags/<tagid>/remove",
                       callback=files.remove_tag)
+    application.route("/files/<sha256>/attachments/add", method="POST",
+                      callback=files.add_attachments)
+    application.route("/files/<sha256>/attachments/<attachment>/delete",
+                      callback=files.delete_attachment)
+    application.route("/files/<sha256>/attachments",
+                      callback=files.list_attachments)

@@ -35,6 +35,10 @@ class FileSchema_v1_1(Schema):
 
 def get_context_formatted(obj, context):
     return obj.get_probe_results(context['formatted'])
+    
+    
+def get_probe_list(obj):
+    return obj.get_probe_list()
 
 
 class FileWebSchema_v1_1(Schema):
@@ -42,6 +46,7 @@ class FileWebSchema_v1_1(Schema):
     file_infos = fields.Nested(FileSchema_v1_1, attribute="file")
     file_sha256 = fields.Nested(FileSchema_v1_1, attribute="file",
                                 only='sha256')
+    probe_list = fields.Function(get_probe_list)
     probe_results = fields.Function(get_context_formatted)
     scan_id = fields.Nested('ScanSchema_v1_1', attribute="scan",
                             only='external_id')
@@ -59,6 +64,7 @@ class FileWebSchema_v1_1(Schema):
                   "scan_id",
                   "scan_date",
                   "file_infos",
+                  "probe_list",
                   "probe_results",
                   "probes_total",
                   "probes_finished",

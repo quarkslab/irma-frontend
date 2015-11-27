@@ -31,14 +31,9 @@ def get_context_formatted(obj, context):
     return obj.get_probe_results(context['formatted'])
 
 
-def get_probe_list(obj):
-    return obj.get_probe_list()
-
-
 class FileWebSchema_v1(Schema):
     result_id = fields.String(attribute="external_id")
     file_infos = fields.Nested(FileSchema_v1, attribute="file")
-    probe_list = fields.Function(get_probe_list)
     probe_results = fields.Function(get_context_formatted)
     scan_id = fields.Nested('ScanSchema_v1', attribute="scan", only='id')
 
@@ -47,7 +42,6 @@ class FileWebSchema_v1(Schema):
                   "result_id",
                   "scan_id",
                   "file_infos",
-                  "probe_list",
                   "probe_results",
                   "probes_total",
                   "probes_finished",

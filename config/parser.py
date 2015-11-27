@@ -276,3 +276,4 @@ def get_samples_storage_path():
 
 def get_attachments_storage_path():
     return os.path.abspath(frontend_config.attachments_storage.path)
+
