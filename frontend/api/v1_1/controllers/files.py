@@ -17,7 +17,7 @@ import os
 import frontend.controllers.filectrl as file_ctrl
 from bottle \
     import response, request
-from frontend.api.errors \
+from frontend.api.v1_1.errors \
     import process_error
 from frontend.helpers.utils \
     import delete_attachment_on_disk, list_attachments_on_disk
