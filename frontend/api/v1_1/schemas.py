@@ -35,8 +35,8 @@ class FileSchema_v1_1(Schema):
 
 def get_context_formatted(obj, context):
     return obj.get_probe_results(context['formatted'])
-    
-    
+
+
 def get_probe_list(obj):
     return obj.get_probe_list()
 

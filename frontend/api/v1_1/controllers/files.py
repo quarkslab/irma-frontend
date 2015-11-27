@@ -77,4 +77,3 @@ def list_attachments(sha256):
         }
     except Exception as e:
         process_error(e)
-
