@@ -12,4 +12,7 @@ test_routes = {
     "/files/<sha256>": ["GET"],
     "/files/<sha256>/tags/<tagid>/add": ["GET"],
     "/files/<sha256>/tags/<tagid>/remove": ["GET"],
+    "/files/<sha256>/attachments": ["GET"],
+    "/files/<sha256>/attachments/add": ["POST"],
+    "/files/<sha256>/attachments/<attachment>/delete": ["GET"],
 }
