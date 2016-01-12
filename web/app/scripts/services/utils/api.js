@@ -14,7 +14,8 @@
         addAttachments: addAttachments,
         deleteAttachment: deleteAttachment,
         listAttachments: listAttachments,
-    }
+        downloadUrl: downloadUrl,
+    };
     service.getProbes = getProbes;
     service.scan = {
         createNew: createNew,
@@ -33,8 +34,10 @@
 
     // File functions
     function addAttachments(sha256) { return bridge.rootUrl + '/files/' + sha256 + '/attachments/add'; }
-    function deleteAttachment(sha256, attachment) { return bridge.get({url: '/files/' + sha256 + '/attachments/' + attachment + '/delete'}); }
+    function deleteAttachment(sha256, attachment) {
+       return bridge.get({url: '/files/' + sha256 + '/attachments/' + attachment + '/delete'}); }
     function listAttachments(sha256) { return bridge.get({url: '/files/' + sha256 + '/attachments'}); }
+    function downloadUrl(sha256) { return bridge.rootUrl + '/files/' + sha256 + '?alt=media'; }
 
     function getProbes() { return bridge.get({url: '/probes'}); }
 
@@ -45,7 +48,7 @@
     function cancel(scan, params) { return bridge.post({url: '/scans/' + scan.id + '/cancel', payload: params}); }
     function getInfos(scan) { return bridge.get({url: '/scans/' + scan.id }); }
     function getResults(scan) { return bridge.get({url: '/scans/' + scan.id + '/results'}); }
-    
+
     // Tag functions
     function addTag(sha256, tagid) { return bridge.get({url: '/files/' + sha256 + '/tags/' + tagid + '/add'}); }
     function removeTag(sha256, tagid) { return bridge.get({url: '/files/' + sha256 + '/tags/' + tagid + '/remove'}); }

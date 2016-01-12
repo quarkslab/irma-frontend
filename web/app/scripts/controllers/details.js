@@ -18,18 +18,18 @@
     vm.uploader = new FileUploader();
     vm.uploadAttachment = uploadAttachment;
     vm.deleteAttachment = deleteAttachment;
+    vm.downloadUrl = undefined;
 
-    $scope.file_url = undefined;
     $scope.probesDoneButNotExist = new Array();
-    
+
     $scope.tagAdded = function(tag) {
     	api.tag.addTag(vm.results.file_infos.sha256, tag.id);
     };
-    
+
     $scope.tagRemoved = function(tag) {
     	api.tag.removeTag(vm.results.file_infos.sha256, tag.id);
     };
-    
+
     $scope.loadAvailableTags = function(query) {
         var results = [];
         for(var i=0; i < $scope.availableTags.length; i++) {
@@ -71,15 +71,15 @@
           vm.attachmentList = response.data;
         }
       });
-      
+
       resultManager.getAvailableTags().then(function(results) {
     	  $scope.availableTags = results.items;
         });
     }
-    
+
     function computeFileURL() {
       var sha256 = vm.results.file_infos.sha256;
-      $scope.file_url = sha256.substr(0,2) + "/" + sha256.substr(2,2) + "/" + sha256.substr(4,2) + "/" + sha256;
+      vm.downloadUrl = vm.api.file.downloadUrl(sha256);
     }
 
     function rescan() {
@@ -116,7 +116,7 @@
     }
 
     function addFileToQueueForRescan() {
-      var url = '/samples/' + $scope.file_url;
+      var url = vm.downloadUrl;
       $http.get(url,{responseType: "blob"})
       .success(function(data, status, headers, config) {
         var mimetype = data.type;
