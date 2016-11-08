@@ -336,8 +336,11 @@ def check_probe(scan, probelist, session):
     IrmaScanStatus.filter_status(scan.status,
                                  IrmaScanStatus.ready,
                                  IrmaScanStatus.ready)
-    all_probe_list = celery_brain.probe_list()
 
+    # LB : here
+    all_probe_list_dict = celery_brain.probe_list()
+    all_probe_list = [p["name"] for p in all_probe_list_dict]
+    
     if probelist is not None:
         unknown_probes = []
         for p in probelist:

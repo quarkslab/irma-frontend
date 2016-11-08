@@ -25,7 +25,8 @@ def list():
     """ get active probe list. This list is used to launch a scan.
     """
     try:
-        probelist = celery_brain.probe_list()
+        allprobelist = celery_brain.probe_list()
+        probelist = [p["name"] for p in allprobelist] 
         log.debug("probe list: %s", "-".join(probelist))
         response.content_type = "application/json; charset=UTF-8"
         return {
